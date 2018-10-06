@@ -27,3 +27,12 @@ knn(DB, X)
 # 部分空間法
 TODO
 k-最近傍法と同様に。関数名は`subapace`かな
+
+# その他
+branch命名規則
+`issue/[issue_number]`で命名
+
+変数名はキャメルケースで統一したい(提案)
+- project_exp_b1 ❌
+- projectExpB1 ⭕️
+
