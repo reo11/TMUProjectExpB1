@@ -10,4 +10,3 @@ for i=1:c
 		DB(:,:,n*(i-1)+j) = img;
 	end
 end
-

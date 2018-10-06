@@ -1,4 +1,4 @@
-function matching(DB, X)
+function number = matching(DB, X)
 	dblX = double(X);
 	for i=1:200
 		A = DB(:,:,i);
@@ -8,5 +8,5 @@ function matching(DB, X)
 	end
 	[minimum, index] = min(distance);
 	number = ceil(index/10);
-	sprintf('X is Person %d.',number)
+	% sprintf('X is Person %d.',number)
 end
