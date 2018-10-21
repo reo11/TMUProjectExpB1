@@ -1,8 +1,8 @@
 % function arrangedDB = cutFace(DB){
-    DBpath = 'dataset/DB/jpeg/*.jpg';
-    path = 'dataset/DB/jpeg/';
+    DBpath = '../dataset/DB/jpeg/*.jpg';
+    path = '../dataset/DB/jpeg/';
     status = 1;
-    foldername = strcat('facedata/DB/jpeg/');
+    foldername = strcat('../facedata/DB/jpeg/');
     [status, msg, msgID] = mkdir(foldername)
 
     faceDetector = vision.CascadeObjectDetector;
@@ -43,10 +43,10 @@
     end
 
 
-    Qpath = 'dataset/Query/jpeg/*.jpg';
-    path = 'dataset/Query/jpeg/';
+    Qpath = '../dataset/Query/jpeg/*.jpg';
+    path = '../dataset/Query/jpeg/';
     status = 1;
-    foldername = strcat('facedata/Query/jpeg/');
+    foldername = strcat('../facedata/Query/jpeg/');
     [status, msg, msgID] = mkdir(foldername)
 
     faceDetector = vision.CascadeObjectDetector;
