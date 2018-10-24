@@ -38,7 +38,7 @@
     for i=1:length(imageName)
         name = strcat(foldername, imageName(i).name)
         I = imread(name);
-        IFaces = imresize(I, [maxY, NaN]);
+        IFaces = imresize(I, [64, NaN]);
         imwrite(IFaces, strcat(foldername, dbname(i).name));
     end
 
@@ -73,7 +73,7 @@
     for i=1:length(imageName)
         name = strcat(foldername, imageName(i).name)
         I = imread(name);
-        IFaces = imresize(I, [maxY, NaN]);
+        IFaces = imresize(I, [64, NaN]);
         imwrite(IFaces, strcat(foldername, queryname(i).name));
     end
 % }
