@@ -1,12 +1,12 @@
-c = 20;
-n = 10;
+faceClass = 20;
+number = 10;
 
 path = '../facedata/DB/jpeg/'
 
-for i=1:c
-	for j=1:n
-		str = strcat(path,num2str(n*(i-1)+j-1, '%03d'),'.jpg');
+for i=1:faceClass
+	for j=1:number
+		str = strcat(path,num2str(number*(i-1)+j-1, '%03d'),'.jpg');
 		img = imread(str);
-		DB(:,:,n*(i-1)+j) = img;
+		DB(:,:,number*(i-1)+j) = img;
 	end
 end
