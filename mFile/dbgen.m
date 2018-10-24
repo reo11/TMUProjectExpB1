@@ -1,7 +1,7 @@
 c = 20;
 n = 10;
 
-path = '../dataset/DB/jpeg/'
+path = '../facedata/DB/jpeg/'
 
 for i=1:c
 	for j=1:n

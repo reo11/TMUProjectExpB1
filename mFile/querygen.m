@@ -1,5 +1,5 @@
-Qpath = '../dataset/Query/jpeg/*.jpg';
-path = '../dataset/Query/jpeg/';
+Qpath = '../facedata/Query/jpeg/*.jpg';
+path = '../facedata/Query/jpeg/';
 D = dir(Qpath);
 for i=1:length(D)
    name = strcat(path, D(i).name);
