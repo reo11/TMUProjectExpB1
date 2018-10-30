@@ -3,9 +3,9 @@ import sys
 import cv2
 import numpy as np
 import tensorflow as tf
-import tensorflow.python.platform
+#import tensorflow.python.platform
 import os
-NUM_CLASSES = 2
+NUM_CLASSES = 20
 IMAGE_SIZE = 28
 IMAGE_PIXELS = IMAGE_SIZE*IMAGE_SIZE*3
 flags = tf.app.flags
@@ -135,7 +135,7 @@ if __name__ == '__main__':
         train_image.append(img.flatten().astype(np.float32)/255.0)
         # ラベルを1-of-k方式で用意する
         tmp = np.zeros(NUM_CLASSES)
-        tmp[int(l[1])] = 1
+        tmp.put(int(l[1],1)
         train_label.append(tmp)
     # numpy形式に変換
     train_image = np.asarray(train_image)
