@@ -90,20 +90,22 @@ def face_shape_detector_dlib(img):
             clone = img.copy()
             # cv2.putText(clone, "mouth", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             # landmarkを画像に書き込む
+            # TODO
+            # この辺をcsvに移植する作業(地獄)
             for (x, y) in shape[0:17]: # chin
-                cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
+                cv2.circle(clone, (x, y), 1, (0, 0, 0), -1)
             for (x, y) in shape[17:22]: # right eyebrow
-                cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
+                cv2.circle(clone, (x, y), 1, (255, 0, 0), -1)
             for (x, y) in shape[22:27]: # left eyebrow
+                cv2.circle(clone, (x, y), 1, (255, 0, 255), -1)
+            for (x, y) in shape[27:36]: # nose
                 cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
-            for (x, y) in shape[27:35]: # nose
-                cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
-            for (x, y) in shape[35:42]: # right eye
-                cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
+            for (x, y) in shape[36:42]: # right eye
+                cv2.circle(clone, (x, y), 1, (0, 255, 255), -1)
             for (x, y) in shape[42:48]: # left eye
-                cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
+                cv2.circle(clone, (x, y), 1, (255, 255, 0), -1)
             for (x, y) in shape[48:68]: # mouth
-                cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
+                cv2.circle(clone, (x, y), 1, (0, 255, 0), -1)
             # shapeで指定した個所の切り取り画像(ROI)を取得
             (x, y, w, h) = cv2.boundingRect(np.array([shape[48:68]])) #口の部位のみ切り出し
             roi = img[y:y + h, x:x + w]
