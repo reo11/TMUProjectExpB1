@@ -5,8 +5,12 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.python.platform
 import os
+gpuConfig = tf.ConfigProto(
+    gpu_options=tf.GPUOptions(per_process_gpu_memory_fraction=0.5),
+    device_count={'GPU': 0})
+
 NUM_CLASSES = 20
-IMAGE_SIZE = 28
+IMAGE_SIZE = 56
 IMAGE_PIXELS = IMAGE_SIZE*IMAGE_SIZE*3
 flags = tf.app.flags
 FLAGS = flags.FLAGS
@@ -15,9 +19,9 @@ flags.DEFINE_string('test', '../textFile/test.txt', 'File name of train data')
 flags.DEFINE_string('image_dir', 'data', 'Directory of images')
 flags.DEFINE_string('train_dir', 'logs', 'Directory to put the training data.')
 flags.DEFINE_integer('max_steps', 200, 'Number of steps to run trainer.')
-flags.DEFINE_integer('batch_size', 10, 'Batch size'
+flags.DEFINE_integer('batch_size', 20, 'Batch size'
                      'Must divide evenly into the dataset sizes.')
-flags.DEFINE_float('learning_rate', 1e-5, 'Initial learning rate.')
+flags.DEFINE_float('learning_rate', 1e-4, 'Initial learning rate.')
 def inference(images_placeholder, keep_prob):
     """ 予測モデルを作成する関数
     引数: 
@@ -43,7 +47,7 @@ def inference(images_placeholder, keep_prob):
                             strides=[1, 2, 2, 1], padding='SAME')
     
     # 入力を28x28x3に変形
-    x_image = tf.reshape(images_placeholder, [-1, 28, 28, 3])
+    x_image = tf.reshape(images_placeholder, [-1, 56, 56, 3])
     # 畳み込み層1の作成
     with tf.name_scope('conv1') as scope:
         W_conv1 = weight_variable([5, 5, 3, 32])
@@ -66,9 +70,9 @@ def inference(images_placeholder, keep_prob):
         h_pool2 = max_pool_2x2(h_conv2)
     # 全結合層1の作成
     with tf.name_scope('fc1') as scope:
-        W_fc1 = weight_variable([7*7*64, 1024])
+        W_fc1 = weight_variable([14*14*64, 1024])
         b_fc1 = bias_variable([1024])
-        h_pool2_flat = tf.reshape(h_pool2, [-1, 7*7*64])
+        h_pool2_flat = tf.reshape(h_pool2, [-1, 14*14*64])
         h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
         # dropoutの設定
         h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
@@ -130,7 +134,7 @@ if __name__ == '__main__':
         l = line.split()
         # データを読み込んで28x28に縮小
         img = cv2.imread(FLAGS.image_dir + '/' + l[0])
-        img = cv2.resize(img, (28, 28))
+        img = cv2.resize(img, (56, 56))
         # 一列にした後、0-1のfloat値にする
         train_image.append(img.flatten().astype(np.float32)/255.0)
         # ラベルを1-of-k方式で用意する
@@ -148,7 +152,7 @@ if __name__ == '__main__':
         line = line.rstrip()
         l = line.split()
         img = cv2.imread(FLAGS.image_dir + '/' + l[0])
-        img = cv2.resize(img, (28, 28))
+        img = cv2.resize(img, (56, 56))
         test_image.append(img.flatten().astype(np.float32)/255.0)
         tmp = np.zeros(NUM_CLASSES)
         tmp[int(l[1])] = 1
@@ -174,7 +178,7 @@ if __name__ == '__main__':
         # 保存の準備
         saver = tf.train.Saver()
         # Sessionの作成
-        sess = tf.Session()
+        sess = tf.Session(config=gpuConfig)
         # 変数の初期化
         sess.run(tf.global_variables_initializer())
         # TensorBoardで表示する値の設定
