@@ -29,32 +29,32 @@ for path in [DBSavePath, QuerySavePath, DBPlotImagePath, \
 
 def cutFace():
     # Database
-    print('Start DB')
-    p = Path(DBPath)
-    p = sorted(p.glob("*.jpg"))
-    df = pd.DataFrame()
-    target_df = pd.DataFrame()
-    preFace = None
-    for index, filename in enumerate(p):
-        img = cv2.imread(DBPath + filename.name)
-        face, plotImg, featurePoint_df = face_shape_detector_dlib(img, filename.name)
-        df = pd.concat([df, featurePoint_df])
-        if len(face)==0:
-            face = preFace
-        preFace = face
-        face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
-        face = cv2.equalizeHist(face)
-        cv2.imwrite(DBSavePath + filename.name, face)
-        cv2.imwrite(DBPlotImagePath + filename.name, plotImg)
-        #print(featurePoint_df)
-        target = int(index / 10) + 1
-        t_df = pd.DataFrame({'target' : target},
-                    index = [filename.name])
-        target_df = pd.concat([target_df, t_df])
-        print(target_df)
-    df = pd.concat([df, target_df], axis=1)
-    df.to_csv(DBPlotCSVPath + 'featurePoint.csv')
-    print('Done DB')
+    # print('Start DB')
+    # p = Path(DBPath)
+    # p = sorted(p.glob("*.jpg"))
+    # df = pd.DataFrame()
+    # target_df = pd.DataFrame()
+    # preFace = None
+    # for index, filename in enumerate(p):
+    #     img = cv2.imread(DBPath + filename.name)
+    #     face, plotImg, featurePoint_df = face_shape_detector_dlib(img, filename.name)
+    #     df = pd.concat([df, featurePoint_df])
+    #     if len(face)==0:
+    #         face = preFace
+    #     preFace = face
+    #     face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
+    #     face = cv2.equalizeHist(face)
+    #     cv2.imwrite(DBSavePath + filename.name, face)
+    #     cv2.imwrite(DBPlotImagePath + filename.name, plotImg)
+    #     #print(featurePoint_df)
+    #     target = int(index / 10) + 1
+    #     t_df = pd.DataFrame({'target' : target},
+    #                 index = [filename.name])
+    #     target_df = pd.concat([target_df, t_df])
+    #     print(target_df)
+    # df = pd.concat([df, target_df], axis=1)
+    # df.to_csv(DBPlotCSVPath + 'featurePoint.csv')
+    # print('Done DB')
 
     print('Start Query')
     # Query
@@ -78,7 +78,7 @@ def cutFace():
         if target[0] == 'r':
             target = 0
         else:
-            target = int(target)
+            target = int(target) + 1
         t_df = pd.DataFrame({'target' : target},
                     index = [filename.name])
         target_df = pd.concat([target_df, t_df])

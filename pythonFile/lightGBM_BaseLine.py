@@ -28,8 +28,6 @@ y_train = X_train['target'].as_matrix()
 
 X_train = X_train.drop('target', axis=1).as_matrix()
 
-
-
 X_test = pd.read_csv(QUERY_DATA_PATH + 'featurePoint.csv',index_col=0)
 y_test = X_test['target'].as_matrix()
 
@@ -61,6 +59,8 @@ gbm = lgb.train(params,
 y_pred = gbm.predict(X_test, num_iteration=gbm.best_iteration)
 y_pred_max = np.argmax(y_pred, axis=1)
 print(y_pred_max)
-np.savetxt('lightGBM_Base.csv',y_pred_max,delimiter=';')
+print(y_test)
+
+# np.savetxt('lightGBM_Base.csv',y_pred_max,delimiter=';')
 accuracy = sum(y_test == y_pred_max) / len(y_test)
-print(accuracy)
+print(str(accuracy*100) + '%')
