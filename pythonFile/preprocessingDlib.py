@@ -61,6 +61,7 @@ def cutFace():
     p = Path(QueryPath)
     p = sorted(p.glob("*.jpg"))
     df = pd.DataFrame()
+    target_df = pd.DataFrame()
     preFace = None
     for filename in p:
         img = cv2.imread(QueryPath + filename.name)
@@ -73,7 +74,16 @@ def cutFace():
         face = cv2.equalizeHist(face)
         cv2.imwrite(QuerySavePath + filename.name, face)
         cv2.imwrite(QueryPlotImagePath + filename.name, plotImg)
+        target = filename.name[0:2]
+        if target[0] == 'r':
+            target = 0
+        else:
+            target = int(target)
+        t_df = pd.DataFrame({'target' : target},
+                    index = [filename.name])
+        target_df = pd.concat([target_df, t_df])
         print(featurePoint_df)
+    df = pd.concat([df, target_df], axis=1)
     df.to_csv(QueryPlotCSVPath + 'featurePoint.csv')
     print('Done Query')
 
