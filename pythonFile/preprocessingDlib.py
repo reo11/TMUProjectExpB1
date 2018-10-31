@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import cv2
+import os
 import dlib
 import imutils
 import numpy as np
@@ -9,23 +10,29 @@ from imutils import face_utils
 DBPath = '../dataset/DB/jpeg/'
 QueryPath = '../dataset/Query/jpeg/'
 SIZE = (200, 200)
- # face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_' + type + '.xml')
-face_cascade_frontalface_default = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
-face_cascade_frontalface_alt = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt.xml')
-face_cascade_frontalface_alt2 = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt2.xml')
-face_cascade_frontalface_alt_tree = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt_tree.xml')
 
-def cutFace(type):
-    DBSavePath = '../' + type + '/DB/jpeg/'
-    QuerySavePath = '../' + type + '/Query/jpeg/'
-    # 特徴分類器の読み込み
-    print('Start DB')
+FILENAME = 'DlibData'
+DBSavePath = '../' + FILENAME + '/DB/jpeg/'
+QuerySavePath = '../' + FILENAME + '/Query/jpeg/'
+DBPlotImagePath = '../' + FILENAME + '/DBPlot/jpeg/'
+QueryPlotImagePath = '../' + FILENAME + '/QueryPlot/jpeg/'
+DBPlotCSVPath = '../' + FILENAME + '/DB/csv/'
+QueryPlotCSVPath = '../' + FILENAME + '/Query/csv/'
+
+for path in [DBSavePath, QuerySavePath, DBPlotImagePath, \
+            QueryPlotImagePath, DBPlotCSVPath, QueryPlotCSVPath]:
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+def cutFace():
     # Database
+    print('Start DB')
     p = Path(DBPath)
     p = sorted(p.glob("*.jpg"))
-    count = 0
     for filename in p:
         img = cv2.imread(DBPath + filename.name)
+        ### frame is arranged image
+        ### roi is a part of face
         frame, roi = face_shape_detector_dlib(img)
         cv2.imshow('img', frame)
         #cv2.imshow('img', roi)
@@ -35,27 +42,13 @@ def cutFace(type):
     # Query
     p = Path(QueryPath)
     p = sorted(p.glob("*.jpg"))
-    count = 0
     for filename in p:
         img = cv2.imread(QueryPath + filename.name)
-        faces = findFace(filename.name, img)
         for (x,y,w,h) in faces:
             face = img[y:y+h, x:x+w]
             face = preProcessing(face)
         cv2.imwrite(QuerySavePath + filename.name,face)
     print('Done Query')
-
-def findFace(name, img):
-    faces = face_cascade_frontalface_alt_tree.detectMultiScale(img)
-    if len(faces)==0:
-        faces = face_cascade_frontalface_alt.detectMultiScale(img)
-        if len(faces)==0:
-            faces = face_cascade_frontalface_alt2.detectMultiScale(img)
-            if len(faces)==0:
-                faces = face_cascade_frontalface_default.detectMultiScale(img)
-                if len(faces)==0:
-                    print(name + ' not found')
-    return faces
 
 def preProcessing(img):
     img = cv2.resize(img, SIZE)
@@ -77,6 +70,7 @@ def preProcessing(img):
 
 # https://qiita.com/ufoo68/items/b1379b40ae6e63ed3c79
 def face_shape_detector_dlib(img):
+    # presetting
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     detector = dlib.get_frontal_face_detector()
     predictor_path = "./shape_predictor_68_face_landmarks.dat"
@@ -114,8 +108,5 @@ def face_shape_detector_dlib(img):
     else :
         return img, None
 
-# cutFace('frontalface_default')
-# cutFace('frontalface_alt')
-# cutFace('frontalface_alt2')
-
-cutFace('facedata')
+if __name__ == '__main__':
+    cutFace()
