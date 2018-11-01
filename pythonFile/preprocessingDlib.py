@@ -92,7 +92,7 @@ def face_shape_detector_dlib(img, name):
     # presetting
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     detector = dlib.get_frontal_face_detector()
-    predictor_path = "./shape_predictor_68_face_landmarks.dat"
+    predictor_path = "./libs/shape_predictor_68_face_landmarks.dat"
     predictor = dlib.shape_predictor(predictor_path)
     # frontal_face_detectorクラスは矩形, スコア, サブ検出器の結果を返す
     dets, scores, idx = detector.run(img_rgb, 0)
