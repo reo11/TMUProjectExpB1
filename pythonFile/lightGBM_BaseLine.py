@@ -23,12 +23,12 @@ from sklearn.metrics import accuracy_score
 DB_DATA_PATH = '../DlibDataChangeLuminace/DB/csv/'
 QUERY_DATA_PATH = '../DlibDataChangeLuminace/Query/csv/'
 
-X_train = pd.read_csv(DB_DATA_PATH + 'featurePoint.csv',index_col=0)
+X_train = pd.read_csv(DB_DATA_PATH + 'featurePoint_nosevec_normalize.csv',index_col=0)
 y_train = X_train['target'].as_matrix()
 
 X_train = X_train.drop('target', axis=1).as_matrix()
 
-X_test = pd.read_csv(QUERY_DATA_PATH + 'featurePoint.csv',index_col=0)
+X_test = pd.read_csv(QUERY_DATA_PATH + 'featurePoint_nosevec_normalize.csv',index_col=0)
 y_test = X_test['target'].as_matrix()
 
 X_test = X_test.drop('target', axis=1).as_matrix()
@@ -41,12 +41,12 @@ params = {
         'task': 'train',
         'boosting_type': 'gbdt',
         'objective': 'multiclass',
-        'metric': {'multi_logloss'},
+        'metric': {'multi_error'},
         'num_class': 21,
-        'learning_rate': 0.1,
+        'learning_rate': 0.01,
         'num_leaves': 32,
-        'min_data_in_leaf': 1,
-        'num_iteration': 100,
+        'min_data_in_leaf': 2,
+        'num_iteration': 20,
         'verbose': 0
 }
 
@@ -55,7 +55,7 @@ gbm = lgb.train(params,
             lgb_train,
             num_boost_round=50,
             valid_sets=lgb_eval,
-            early_stopping_rounds=10)
+            early_stopping_rounds=100)
 y_pred = gbm.predict(X_test, num_iteration=gbm.best_iteration)
 y_pred_max = np.argmax(y_pred, axis=1)
 print(y_pred_max)

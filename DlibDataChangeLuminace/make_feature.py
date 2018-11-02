@@ -29,7 +29,7 @@ for i in range(df.shape[0]):
     targetNose = df.iloc[i, noseColStart:noseColEnd]
     for j in range(0,targetNose.shape[0],2):
         imgArray[targetNose[j+1], targetNose[j]] = 255
-    
+
     # check center of gravity
     """
     cv2.circle(imgArray, (x,y), 4, 100, 2, 4)
@@ -38,18 +38,19 @@ for i in range(df.shape[0]):
     cv2.destroyAllWindows()
     break
     """
-    
+
     mu = cv2.moments(imgArray, False)
     x,y= int(mu["m10"]/mu["m00"]) , int(mu["m01"]/mu["m00"])
-    
+
     targetChin = df.iloc[i, chinColStart:chinColEnd]
     faceWidth = targetChin.max() - targetChin.min()
 
-    df_out.iloc[i, list(range(1, df.shape[1]-1, 2))] = (df.iloc[i, list(range(1, df.shape[1]-1, 2))] - x) / faceWidth
-    df_out.iloc[i, list(range(2, df.shape[1]-1, 2))] = (df.iloc[i, list(range(2, df.shape[1]-1, 2))] - y) / faceWidth
-    #print(x, y)    
-    #print(df_out.iloc[i, :])    
+    df_out.iloc[i, list(range(1, df.shape[1]-1, 2))] = (df.iloc[i, list(range(1, df.shape[1]-1, 2))] - x) / faceWidth + 1
+    df_out.iloc[i, list(range(2, df.shape[1]-1, 2))] = (df.iloc[i, list(range(2, df.shape[1]-1, 2))] - y) / faceWidth + 1
+
+    #print(x, y)
+    #print(df_out.iloc[i, :])
     #break
-    
+
+
 df_out.to_csv(INPUT_DIR + "featurePoint_nosevec_normalize.csv", index=False)
-    
