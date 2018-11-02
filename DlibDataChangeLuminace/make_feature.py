@@ -9,7 +9,7 @@ import cv2
 import pandas as pd
 import numpy as np
 
-INPUT_DIR = 'Query/csv/'
+INPUT_DIR = 'DB/csv/'
 df = pd.read_csv(INPUT_DIR + "featurePoint.csv")
 
 orgImgHeight = 286
@@ -17,6 +17,9 @@ orgImgWidth = 384
 
 noseColStart = 55
 noseColEnd = 73
+
+chinColStart = 1
+chinColEnd = 35
 #print(df.iloc[0, :])
 df_out = df.copy()
 for i in range(df.shape[0]):
@@ -39,10 +42,14 @@ for i in range(df.shape[0]):
     mu = cv2.moments(imgArray, False)
     x,y= int(mu["m10"]/mu["m00"]) , int(mu["m01"]/mu["m00"])
     
-    df_out.iloc[i, list(range(1, df.shape[1]-1, 2))] = df.iloc[i, list(range(1, df.shape[1]-1, 2))] - x
-    df_out.iloc[i, list(range(2, df.shape[1]-1, 2))] = df.iloc[i, list(range(2, df.shape[1]-1, 2))] - y
+    targetChin = df.iloc[i, chinColStart:chinColEnd]
+    faceWidth = targetChin.max() - targetChin.min()
+
+    df_out.iloc[i, list(range(1, df.shape[1]-1, 2))] = (df.iloc[i, list(range(1, df.shape[1]-1, 2))] - x) / faceWidth
+    df_out.iloc[i, list(range(2, df.shape[1]-1, 2))] = (df.iloc[i, list(range(2, df.shape[1]-1, 2))] - y) / faceWidth
     #print(x, y)    
     #print(df_out.iloc[i, :])    
+    #break
     
-df_out.to_csv(INPUT_DIR + "featurePoint_nosevec.csv", index=False)
+df_out.to_csv(INPUT_DIR + "featurePoint_nosevec_normalize.csv", index=False)
     
