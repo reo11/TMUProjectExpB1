@@ -96,6 +96,8 @@ for mode in ['DB', 'Query']:
     df_target_y = df_target.iloc[:, 1:-1:2]
     df_out['mouse_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
     
-    
+    for i in range(df_out.shape[0]):
+        df_out.iloc[i, 1:] = df_out.iloc[i, 1:]/df_out['face_width'][i]
+    df_out.drop('face_width', axis=1, inplace=True)
 
-    df_out.to_csv(INPUT_DIR + "features_basic.csv")
+    df_out.to_csv(INPUT_DIR + "features_basic_divFaceWidth.csv")
