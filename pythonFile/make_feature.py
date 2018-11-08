@@ -7,11 +7,11 @@ Created on Fri Nov  2 12:02:21 2018
 
 #import cv2
 import pandas as pd
-#import numpy as np
+import numpy as np
 #import gc
 
 faceStart = 1
-faceEnd = 138
+faceEnd = 137
 
 chinColStart = 1
 chinColEnd = 35
@@ -42,9 +42,9 @@ for mode in ['DB', 'Query']:
     
     # face(顔)
     df_target = df.iloc[:, faceStart:faceEnd]
-    df_target_x = df.iloc[:, 0:-1:2]
+    df_target_x = df_target.iloc[:, 0:-1:2]
     df_out['face_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
-    df_target_y = df.iloc[:, 1:-1:2]
+    df_target_y = df_target.iloc[:, 1:-1:2]
     df_out['face_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
     
     # chin(アゴ)
@@ -74,6 +74,8 @@ for mode in ['DB', 'Query']:
     df_out['nose_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
     df_target_y = df_target.iloc[:, 1:-1:2]
     df_out['nose_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
+    df['nose_width_center'] = df_target_x.mean(axis=1)
+    df['nose_height_center'] = df_target_y.mean(axis=1)
     
     # right eye(右目)
     df_target = df.iloc[:, rightEyeStart:rightEyeEnd]
@@ -81,6 +83,8 @@ for mode in ['DB', 'Query']:
     df_out['right_Eye_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
     df_target_y = df_target.iloc[:, 1:-1:2]
     df_out['right_Eye_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
+    df['right_Eye_width_center'] = df_target_x.mean(axis=1)
+    df['right_Eye_height_center'] = df_target_y.mean(axis=1)
     
     # left eye(左目)
     df_target = df.iloc[:, leftEyeStart:leftEyeEnd]
@@ -88,6 +92,8 @@ for mode in ['DB', 'Query']:
     df_out['left_Eye_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
     df_target_y = df_target.iloc[:, 1:-1:2]
     df_out['left_Eye_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
+    df['left_Eye_width_center'] = df_target_x.mean(axis=1)
+    df['left_Eye_height_center'] = df_target_y.mean(axis=1)
     
     # mouse(口)
     df_target = df.iloc[:, mouseStart:mouseEnd]
@@ -95,9 +101,28 @@ for mode in ['DB', 'Query']:
     df_out['mouse_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
     df_target_y = df_target.iloc[:, 1:-1:2]
     df_out['mouse_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
+    df['mouse_width_center'] = df_target_x.mean(axis=1)
+    df['mouse_height_center'] = df_target_y.mean(axis=1)
+    
+    # relative distance(各部位の相対的な距離)
+    df_out['eye2eye_dist'] = np.sqrt((df['right_Eye_width_center'] - df['left_Eye_width_center'])**2 + \
+                                (df['right_Eye_height_center'] - df['left_Eye_height_center'])**2)
+    df_out['Reye2nose_dist'] = np.sqrt((df['right_Eye_width_center'] - df['nose_width_center'])**2 + \
+                                (df['right_Eye_height_center'] - df['nose_height_center'])**2)
+    df_out['Leye2nose_dist'] = np.sqrt((df['left_Eye_width_center'] - df['nose_width_center'])**2 + \
+                                (df['left_Eye_height_center'] - df['nose_height_center'])**2)
+    df_out['nose2mouse_dist'] = np.sqrt((df['nose_width_center'] - df['mouse_width_center'])**2 + \
+                                (df['nose_height_center'] - df['mouse_height_center'])**2)
+    df_out['nose2mouse_dist'] = np.sqrt((df['nose_width_center'] - df['mouse_width_center'])**2 + \
+                                (df['nose_height_center'] - df['mouse_height_center'])**2)
+    df_out['Reye2mouse_dist'] = np.sqrt((df['right_Eye_width_center'] - df['mouse_width_center'])**2 + \
+                                (df['right_Eye_height_center'] - df['mouse_height_center'])**2)
+    df_out['Leye2mouse_dist'] = np.sqrt((df['left_Eye_width_center'] - df['mouse_width_center'])**2 + \
+                                (df['left_Eye_height_center'] - df['mouse_height_center'])**2)
     
     for i in range(df_out.shape[0]):
         df_out.iloc[i, 1:] = df_out.iloc[i, 1:]/df_out['face_width'][i]
     df_out.drop('face_width', axis=1, inplace=True)
 
-    df_out.to_csv(INPUT_DIR + "features_basic_divFaceWidth.csv")
+    df_out.to_csv(INPUT_DIR + "features_rel_dist.csv")
+    
