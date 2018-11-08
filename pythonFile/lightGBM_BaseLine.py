@@ -23,12 +23,12 @@ from sklearn.metrics import accuracy_score
 DB_DATA_PATH = '../DlibDataChangeLuminace/DB/csv/'
 QUERY_DATA_PATH = '../DlibDataChangeLuminace/Query/csv/'
 
-X_train = pd.read_csv(DB_DATA_PATH + 'features_basic_divFaceWidth.csv',index_col=0)
+X_train = pd.read_csv(DB_DATA_PATH + 'features_rel_dist.csv',index_col=0)
 y_train = X_train['target'].as_matrix()
 
 X_train = X_train.drop('target', axis=1).as_matrix()
 
-X_test = pd.read_csv(QUERY_DATA_PATH + 'features_basic_divFaceWidth.csv',index_col=0)
+X_test = pd.read_csv(QUERY_DATA_PATH + 'features_rel_dist.csv',index_col=0)
 y_test = X_test['target'].as_matrix()
 
 X_test = X_test.drop('target', axis=1).as_matrix()
