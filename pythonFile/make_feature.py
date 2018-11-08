@@ -5,52 +5,99 @@ Created on Fri Nov  2 12:02:21 2018
 @author: hiroki
 """
 
-import cv2
+#import cv2
 import pandas as pd
-import numpy as np
+#import numpy as np
+#import gc
 
-orgImgHeight = 286
-orgImgWidth = 384
+faceStart = 1
+faceEnd = 138
+
+chinColStart = 1
+chinColEnd = 35
+
+rightEyebrowStart = 35
+rightEyebrowEnd = 45
+
+leftEyebrowStart = 45
+leftEyebrowEnd = 55
 
 noseColStart = 55
 noseColEnd = 73
 
-chinColStart = 1
-chinColEnd = 35
+rightEyeStart = 73
+rightEyeEnd = 85
+
+leftEyeStart = 85
+leftEyeEnd = 97
+
+mouseStart = 97
+mouseEnd = 138
 
 for mode in ['DB', 'Query']:
     INPUT_DIR = '../DlibDataChangeLuminace/' + mode + '/csv/'
     df = pd.read_csv(INPUT_DIR + "featurePoint.csv")
     
-    df_out = df.copy()
-    for i in range(df.shape[0]):
-        #print(i)
-        imgArray = np.zeros((orgImgHeight, orgImgWidth), np.uint8)
+    df_out = pd.DataFrame(df['target'].copy())
     
-        targetNose = df.iloc[i, noseColStart:noseColEnd]
-        for j in range(0,targetNose.shape[0],2):
-            imgArray[targetNose[j+1], targetNose[j]] = 255
+    # face(顔)
+    df_target = df.iloc[:, faceStart:faceEnd]
+    df_target_x = df.iloc[:, 0:-1:2]
+    df_out['face_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
+    df_target_y = df.iloc[:, 1:-1:2]
+    df_out['face_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
     
-        # check center of gravity
-        """
-        cv2.circle(imgArray, (x,y), 4, 100, 2, 4)
-        cv2.imshow("test", imgArray)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-        break
-        """
+    # chin(アゴ)
+    df_target = df.iloc[:, chinColStart:chinColEnd]
+    df_target_x = df_target.iloc[:, 0:-1:2]
+    df_out['chin_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
+    df_target_y = df_target.iloc[:, 1:-1:2]
+    df_out['chin_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
     
-        mu = cv2.moments(imgArray, False)
-        x,y= int(mu["m10"]/mu["m00"]) , int(mu["m01"]/mu["m00"])
+    # right eye brow(右マユ)
+    df_target = df.iloc[:, rightEyebrowStart:rightEyebrowEnd]
+    df_target_x = df_target.iloc[:, 0:-1:2]
+    df_out['right_Eyebrow_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
+    df_target_y = df_target.iloc[:, 1:-1:2]
+    df_out['right_Eyebrow_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
     
-        targetChin = df.iloc[i, chinColStart:chinColEnd]
-        faceWidth = targetChin.max() - targetChin.min()
+    # left eye brow(左マユ)
+    df_target = df.iloc[:, leftEyebrowStart:leftEyebrowEnd]
+    df_target_x = df_target.iloc[:, 0:-1:2]
+    df_out['left_Eyebrow_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
+    df_target_y = df_target.iloc[:, 1:-1:2]
+    df_out['left_Eyebrow_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
     
-        df_out.iloc[i, list(range(1, df.shape[1]-1, 2))] = (df.iloc[i, list(range(1, df.shape[1]-1, 2))] - x) / faceWidth + 1
-        df_out.iloc[i, list(range(2, df.shape[1]-1, 2))] = (df.iloc[i, list(range(2, df.shape[1]-1, 2))] - y) / faceWidth + 1
+    # nose(鼻)
+    df_target = df.iloc[:, noseColStart:noseColEnd]
+    df_target_x = df_target.iloc[:, 0:-1:2]
+    df_out['nose_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
+    df_target_y = df_target.iloc[:, 1:-1:2]
+    df_out['nose_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
     
-        #print(x, y)
-        #print(df_out.iloc[i, :])
-        #break
+    # right eye(右目)
+    df_target = df.iloc[:, rightEyeStart:rightEyeEnd]
+    df_target_x = df_target.iloc[:, 0:-1:2]
+    df_out['right_Eye_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
+    df_target_y = df_target.iloc[:, 1:-1:2]
+    df_out['right_Eye_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
     
-    df_out.to_csv(INPUT_DIR + "featurePoint_nosevec_normalize_temp.csv", index=False)
+    # left eye(左目)
+    df_target = df.iloc[:, leftEyeStart:leftEyeEnd]
+    df_target_x = df_target.iloc[:, 0:-1:2]
+    df_out['left_Eye_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
+    df_target_y = df_target.iloc[:, 1:-1:2]
+    df_out['left_Eye_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
+    
+    # mouse(口)
+    df_target = df.iloc[:, mouseStart:mouseEnd]
+    df_target_x = df_target.iloc[:, 0:-1:2]
+    df_out['mouse_width'] = df_target_x.max(axis=1) - df_target_x.min(axis=1)
+    df_target_y = df_target.iloc[:, 1:-1:2]
+    df_out['mouse_height'] = df_target_y.max(axis=1) - df_target_y.min(axis=1)
+    
+    for i in range(df_out.shape[0]):
+        df_out.iloc[i, 1:] = df_out.iloc[i, 1:]/df_out['face_width'][i]
+    df_out.drop('face_width', axis=1, inplace=True)
+
+    df_out.to_csv(INPUT_DIR + "features_basic_divFaceWidth.csv")
