@@ -17,6 +17,7 @@ if __name__ == '__main__':
     queryList = []
     distanceList = []
     answerList = []
+    count = 0
 
     with open("dct.csv", mode='w') as f:
         f.write('query_name,answer\n')
@@ -47,18 +48,21 @@ if __name__ == '__main__':
             mode = np.argmax(np.bincount(ranking))
             #print(str(ranking) + '   ' + str(answerList[-1]))
             #print('mode: ' + str(mode))
-            if mode != answerList[-1]:
-                target = filename.name[0:2]
-                if target[0] == 'r':
-                    target = 0
-                else:
-                    target = int(target) + 1
-                # 結果に応じて色を付ける
-                if target == mode :
-                    print(colored(filename.name + ', mode: ' + str(mode) + ', answer: ' + str(answerList[-1]), 'blue'))
-                elif target == answerList[-1]:
-                    print(colored(filename.name + ', mode: ' + str(mode) + ', answer: ' + str(answerList[-1]), 'red'))
-                else:
-                    print(filename.name + ', mode: ' + str(mode) + ', answer: ' + str(answerList[-1]))
+            # if mode != answerList[-1]:
+            target = filename.name[0:2]
+            if target[0] == 'r':
+                target = 0
+            else:
+                target = int(target) + 1
+            # 結果に応じて色を付ける
+            # if target == mode :
+            #     print(colored(filename.name + ', mode: ' + str(mode) + ', answer: ' + str(answerList[-1]), 'blue'))
+            if target == answerList[-1]:
+                count += 1
+                print(colored(filename.name + ', mode: ' + str(mode) + ', answer: ' + str(answerList[-1]) + ', correct answer: ' + str(target), 'blue'))
+            else:
+                print(colored(filename.name + ', mode: ' + str(mode) + ', answer: ' + str(answerList[-1]) + ', correct answer: ' + str(target), 'red'))
             distanceList = []
             f.write(filename.name + ',' + str(answerList[-1]) + '\n')
+        accuracy  = count / len(queryList) * 100    
+        print(str(accuracy) + '%')
