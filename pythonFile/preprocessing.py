@@ -60,7 +60,7 @@ def findFace(name, img):
 
 def preProcessing(img):
     img = cv2.resize(img, SIZE)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # #Sobelフィルタでx方向のエッジ検出
     # gray_sobelx = cv2.Sobel(img,cv2.CV_32F,1,0)
     # #Sobelフィルタでy方向のエッジ検出
@@ -71,7 +71,7 @@ def preProcessing(img):
     # #重み付き和
     # img = cv2.addWeighted(gray_abs_sobelx,0.5,gray_abs_sobely,0.5,0)
     # img = (img - np.mean(img))/np.std(img)*32+100
-    img = cv2.equalizeHist(img)
+    # img = cv2.equalizeHist(img)
     # img = cv2.Canny(img,100,200)
     # img = cv2.GaussianBlur(img, (5, 5), 0)
     return img
@@ -80,4 +80,4 @@ def preProcessing(img):
 # cutFace('frontalface_alt')
 # cutFace('frontalface_alt2')
 
-cutFace('facedata')
+cutFace('example')
