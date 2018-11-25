@@ -5,8 +5,8 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from pathlib import Path
-DB_PATH = '/Users/reo/.ghq/github.com/reo11/TMUProjectExpB1/DlibDataChangeLuminace/DB/csv/'
-os.chdir(DB_PATH)
+# DB_PATH = '/Users/reo/.ghq/github.com/reo11/TMUProjectExpB1/DlibDataChangeLuminace/DB/csv/'
+os.chdir('../DlibDataChangeLuminace/DB/csv')
 os.getcwd()
 
 #%%
