@@ -11,7 +11,7 @@ import numpy as np
 #import gc
 
 faceStart = 1
-faceEnd = 137
+faceEnd = 138
 
 chinColStart = 1
 chinColEnd = 35
