@@ -7,8 +7,8 @@ from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-DB_DATA_PATH = '../dct225/'
-QUERY_DATA_PATH = '../dct225/'
+DB_DATA_PATH = './'
+QUERY_DATA_PATH = './'
 
 X_train = pd.read_csv(DB_DATA_PATH + 'db_list.csv', index_col=0)
 y_train = X_train['target'].as_matrix()
@@ -29,7 +29,7 @@ params = {
     'boosting_type': 'gbdt',
     'objective': 'multiclass',
     'metric': {'multi_error'},
-    'num_class': 21,
+    'num_class': 20,
     'learning_rate': 0.01,
     'num_leaves': 32,
     'min_data_in_leaf': 10,
@@ -44,7 +44,7 @@ gbm = lgb.train(params,
                 lgb_train,
                 num_boost_round=100,
                 valid_sets=lgb_eval,
-                early_stopping_rounds=1000)
+                early_stopping_rounds=100)
 y_pred = gbm.predict(X_test, num_iteration = gbm.best_iteration)
 y_pred_max = np.argmax(y_pred, axis=1)
 print(y_pred_max)

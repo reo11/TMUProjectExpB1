@@ -48,7 +48,7 @@ if __name__ == '__main__':
         dst = dst[:15,:15]
         for ind, name in enumerate(feature_name_list):
             db_df.loc[index, name] = np.array(dst).flatten()[ind]
-        db_df.loc[index, 'target'] = int(index/10) + 1
+        db_df.loc[index, 'target'] = int(index/10)
         # cv2.imwrite(DBDctSavePath + filename.name, dst)
         dbList.append(np.float32(dst))
     db_df.to_csv("db_list.csv")
@@ -72,7 +72,7 @@ if __name__ == '__main__':
         if target[0] == 'r':
             target = 0
         else:
-            target = int(target) + 1
+            target = int(target)
         query_df.loc[index, 'target'] = target
         # cv2.imwrite(QueryDctSavePath + filename.name, dst)
         queryList.append(np.float32(dst))
@@ -80,8 +80,8 @@ if __name__ == '__main__':
             distance  = (dbList[index][:15, :15] - queryList[-1][:15, :15])**2
             distanceList.append(distance.sum())
         distSort = np.argsort(distanceList)
-        answerList.append(np.uint8(np.argmin(distanceList)/10)+1)
-        ranking = np.uint8(distSort[:10]/10)+1
+        answerList.append(np.uint8(np.argmin(distanceList)/10))
+        ranking = np.uint8(distSort[:10]/10)
         mode = np.argmax(np.bincount(ranking))
         #print(str(ranking) + '   ' + str(answerList[-1]))
         #print('mode: ' + str(mode))
@@ -90,7 +90,7 @@ if __name__ == '__main__':
         if target[0] == 'r':
             target = 0
         else:
-            target = int(target) + 1
+            target = int(target)
         # 結果に応じて色を付ける
         if target == mode :
             print(colored(filename.name + ', mode: ' + str(mode) + ', answer: ' + str(answerList[-1]), 'blue'))
