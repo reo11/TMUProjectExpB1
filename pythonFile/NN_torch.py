@@ -16,9 +16,7 @@ net = nn.Sequential(
         nn.ReLU(),
         nn.Linear(512, 124),
         nn.ReLU(),
-        nn.Linear(124, 64),
-        nn.ReLU(),
-        nn.Linear(64, 20)
+        nn.Linear(124, 20)
 )
 
 # データの読み込み
@@ -26,13 +24,13 @@ train_df = pd.read_csv("db_list.csv", index_col=0)
 test_df = pd.read_csv("query_list.csv", index_col=0)
 
 X_train = torch.tensor(train_df.drop(["target"], axis=1).values, dtype=torch.float32)
-y_train = torch.tensor(train_df["target"], dtype=torch.int64)-1
+y_train = torch.tensor(train_df["target"], dtype=torch.int64)
 
 X_test = torch.tensor(test_df.drop(["target"], axis=1).values, dtype=torch.float32)
-y_test = torch.tensor(test_df["target"], dtype=torch.int64)-1
+y_test = torch.tensor(test_df["target"], dtype=torch.int64)
 # めんどいので外れ値を21に変更
-y_test[56] = 21
-y_test[57] = 21
+#y_test[56] = 21
+#y_test[57] = 21
 
 # 損失関数
 loss_fn = nn.CrossEntropyLoss()
@@ -46,7 +44,7 @@ losses_test = []
 accuracy = []
 
 # 20エポック回す
-for epoc in range(20):
+for epoc in range(100):
     optimizer.zero_grad()
     
     y_pred = net(X_train)
