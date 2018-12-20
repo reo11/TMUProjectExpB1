@@ -35,7 +35,6 @@ if __name__ == '__main__':
     for i in range(225):
         featrue_name = 'dct_' + str(i)
         feature_name_list.append(featrue_name)
-    feature_name_list.append('target')
     db_df = pd.DataFrame(columns=feature_name_list)
     for index, filename in enumerate(tqdm(p)):
         img = cv2.imread(dbPath + filename.name, 0)
@@ -46,6 +45,7 @@ if __name__ == '__main__':
         # cv2.imwrite(DBCannySavePath + filename.name, img)
         imf = np.float32(img)
         dst = cv2.dct(imf)
+        dst = dst[:15,:15]
         for ind, name in enumerate(feature_name_list):
             db_df.loc[index, name] = np.array(dst).flatten()[ind]
         db_df.loc[index, 'target'] = int(index/10) + 1
@@ -65,6 +65,7 @@ if __name__ == '__main__':
         # cv2.imwrite(QueryCannySavePath + filename.name, img)
         imf = np.float32(img)
         dst = cv2.dct(imf)
+        dst = dst[:15,:15]
         for ind, name in enumerate(feature_name_list):
             query_df.loc[index, name] = np.array(dst).flatten()[ind]
         target = filename.name[0:2]

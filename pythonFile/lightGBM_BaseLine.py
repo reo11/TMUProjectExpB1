@@ -31,7 +31,7 @@ params = {
     'metric': {'multi_error'},
     'num_class': 21,
     'learning_rate': 0.01,
-    'num_leaves': 16,
+    'num_leaves': 32,
     'min_data_in_leaf': 10,
     'num_iteration': 200,
     'verbose': 20
