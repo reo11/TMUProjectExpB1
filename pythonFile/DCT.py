@@ -48,10 +48,8 @@ if __name__ == '__main__':
         dst = dst[:15,:15]
         for ind, name in enumerate(feature_name_list):
             db_df.loc[index, name] = np.array(dst).flatten()[ind]
-        db_df.loc[index, 'target'] = int(index/10)
         # cv2.imwrite(DBDctSavePath + filename.name, dst)
         dbList.append(np.float32(dst))
-    db_df.to_csv("db_list.csv")
     p = Path(queryPath)
     p = sorted(p.glob("*.jpg"))
     query_df = pd.DataFrame(columns=feature_name_list)
@@ -68,12 +66,6 @@ if __name__ == '__main__':
         dst = dst[:15,:15]
         for ind, name in enumerate(feature_name_list):
             query_df.loc[index, name] = np.array(dst).flatten()[ind]
-        target = filename.name[0:2]
-        if target[0] == 'r':
-            target = 0
-        else:
-            target = int(target)
-        query_df.loc[index, 'target'] = target
         # cv2.imwrite(QueryDctSavePath + filename.name, dst)
         queryList.append(np.float32(dst))
         for index in range(len(dbList)):
@@ -101,6 +93,38 @@ if __name__ == '__main__':
             print(colored(filename.name + ', mode: ' + str(mode) + ', answer: ' + str(answerList[-1]) + ', correct answer: ' + str(target), 'red'))
         distanceList = []
         #f.write(filename.name + ',' + str(answerList[-1]) + '\n')
+    if db_df.min().min() < query_df.min().min():
+        norm_min = db_df.min().min()
+    else:
+        norm_min = query_df.min().min()
+
+    db_df = db_df - norm_min
+    query_df = query_df - norm_min
+
+    if db_df.max().max() > query_df.max().max():
+        norm_max = db_df.max().max()
+    else:
+        norm_max = query_df.max().max()
+
+    db_df = db_df / norm_max
+    query_df = query_df / norm_max
+
+    p = Path(dbPath)
+    p = sorted(p.glob("*.jpg"))
+    for index, filename in enumerate(tqdm(p)):
+        db_df.loc[index, 'target'] = int(index/10)
+    db_df.to_csv("db_list.csv")
+
+    p = Path(queryPath)
+    p = sorted(p.glob("*.jpg"))
+    for index, filename in enumerate(tqdm(p)):
+        target = filename.name[0:2]
+        if target[0] == 'r':
+            target = 0
+        else:
+            target = int(target)
+        query_df.loc[index, 'target'] = target
     query_df.to_csv("query_list.csv")
+
     accuracy  = count / len(queryList) * 100
     print(str(accuracy) + '%')
