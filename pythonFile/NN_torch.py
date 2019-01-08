@@ -12,11 +12,15 @@ from torch import optim
 import pandas as pd
 
 net = nn.Sequential(
-        nn.Linear(225, 512),
+        nn.Linear(225, 1024),
         nn.ReLU(),
-        nn.Linear(512, 124),
+        nn.Linear(1024, 1024),
         nn.ReLU(),
-        nn.Linear(124, 20)
+        nn.Linear(1024, 1024),
+        nn.ReLU(),
+        nn.Linear(1024, 1024),
+        nn.ReLU(),
+        nn.Linear(1024, 20)
 )
 
 # データの読み込み
@@ -44,7 +48,7 @@ losses_test = []
 accuracy = []
 
 # 20エポック回す
-for epoc in range(100):
+for epoc in range(200):
     optimizer.zero_grad()
     
     y_pred = net(X_train)
