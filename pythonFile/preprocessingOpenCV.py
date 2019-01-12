@@ -6,7 +6,7 @@ from pathlib import Path
 DBPath = '../dataset/DB/jpeg/'
 QueryPath = '../dataset/Query/jpeg/'
 SIZE = (200, 200)
- # face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_' + type + '.xml')
+# face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_' + type + '.xml')
 face_cascade_frontalface_default = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
 face_cascade_frontalface_alt = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt.xml')
 face_cascade_frontalface_alt2 = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt2.xml')
