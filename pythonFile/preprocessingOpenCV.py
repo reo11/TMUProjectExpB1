@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+import os
 import cv2
 import numpy as np
 from pathlib import Path
+from tqdm import tqdm
 
-DBPath = '../dataset/DB/jpeg/'
-QueryPath = '../dataset/Query/jpeg/'
-SIZE = (200, 200)
+DBPath = '../input/default/dataset/DB/jpeg/'
+QueryPath = '../input/default/dataset/Query/jpeg/'
+SIZE = (128, 128)
 # face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_' + type + '.xml')
 face_cascade_frontalface_default = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
 face_cascade_frontalface_alt = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt.xml')
@@ -13,8 +15,9 @@ face_cascade_frontalface_alt2 = cv2.CascadeClassifier('haarcascades/haarcascade_
 face_cascade_frontalface_alt_tree = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt_tree.xml')
 
 def cutFace(type):
-    DBSavePath = '../' + type + '/DB/jpeg/'
-    QuerySavePath = '../' + type + '/Query/jpeg/'
+    DBSavePath = '../input/opencv/' + type + '/DB/jpeg/'
+    QuerySavePath = '../input/opencv/' + type + '/Query/jpeg/'
+
     # Haar-like特徴分類器の読み込み
 
     print('Start DB')
@@ -22,7 +25,7 @@ def cutFace(type):
     p = Path(DBPath)
     p = sorted(p.glob("*.jpg"))
     count = 0
-    for filename in p:
+    for filename in tqdm(p):
         img = cv2.imread(DBPath + filename.name)
         faces = findFace(filename.name, img)
         for (x,y,w,h) in faces:
@@ -36,7 +39,7 @@ def cutFace(type):
     p = Path(QueryPath)
     p = sorted(p.glob("*.jpg"))
     count = 0
-    for filename in p:
+    for filename in tqdm(p):
         img = cv2.imread(QueryPath + filename.name)
         faces = findFace(filename.name, img)
         for (x,y,w,h) in faces:
@@ -80,4 +83,4 @@ def preProcessing(img):
 # cutFace('frontalface_alt')
 # cutFace('frontalface_alt2')
 
-cutFace('example')
+cutFace('cutface')
