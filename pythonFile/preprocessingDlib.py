@@ -49,7 +49,7 @@ def cutFace():
             print('db error')
         preFace = face
         face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
-        #face = cv2.equalizeHist(face)
+        face = cv2.equalizeHist(face)
         face = cv2.resize(face,SIZE)
         cv2.imwrite(DBSavePath + filename.name, face)
         cv2.imwrite(DBPlotImagePath + filename.name, plotImg)
@@ -78,7 +78,7 @@ def cutFace():
             print('query error')
         preFace = face
         face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
-        #face = cv2.equalizeHist(face)
+        face = cv2.equalizeHist(face)
         face = cv2.resize(face,SIZE)
         cv2.imwrite(QuerySavePath + filename.name, face)
         cv2.imwrite(QueryPlotImagePath + filename.name, plotImg)
