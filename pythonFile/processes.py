@@ -34,8 +34,8 @@ class processes:
             # 画像の場合targetの取得方法がないので強制的に、このcsvから取ってくる
             self.targetDBPath = "../input/Dlib/cutface/histFlattening/DB/csv/features_rel_dist.csv"
             self.targetQueryPath = "../input/Dlib/cutface/histFlattening/Query/csv/features_rel_dist.csv"
-            self.db_df = pd.read_csv(self.targetDBPath, index_col=0)
-            self.query_df = pd.read_csv(self.targetQueryPath, index_col=0)
+            self.db_df = pd.read_csv(self.targetDBPath)
+            self.query_df = pd.read_csv(self.targetQueryPath)
             self.db_target_df = self.db_df["target"].copy()
             self.query_target_df = self.query_df["target"].copy()
             
@@ -62,8 +62,8 @@ class processes:
                 self.queryImages.append((img/225).astype(np.float32))
             
         else:
-            self.db_df = pd.read_csv(dbPath, index_col=0)
-            self.query_df = pd.read_csv(queryPath, index_col=0)
+            self.db_df = pd.read_csv(dbPath)
+            self.query_df = pd.read_csv(queryPath)
             self.db_feature_df = self.db_df.drop(["target"], axis=1).copy()
             self.db_target_df = self.db_df["target"].copy()
             self.query_featture_df =self.query_df.drop(["target"], axis=1).copy()

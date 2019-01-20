@@ -103,12 +103,15 @@ class Example(QWidget):
         
         self.lblAccu = QLabel(self)
         self.lblAccu.setText(self.prefixAns)
+        self.lblAccu.setAlignment(Qt.AlignCenter)
+        self.vboxOpe3.addWidget(self.lblEmpty)
         self.vboxOpe3.addWidget(self.lblAccu)
         
         
         self.vboxMain.addLayout(self.vboxOpe1)
         self.vboxMain.addLayout(self.vboxOpe2)
         self.vboxMain.addLayout(self.vboxOpe3)
+        self.vboxMain.addWidget(self.lblAccu)
         self.vboxMain.setAlignment(Qt.AlignTop)
         
         self.show()
