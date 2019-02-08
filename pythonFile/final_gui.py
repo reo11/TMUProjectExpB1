@@ -122,7 +122,7 @@ class Example(QWidget):
         if(self.isFolder):
             dirname = QFileDialog.getExistingDirectory(self,
                                                        'open folder',
-                                                       os.path.expanduser('../'),
+                                                       os.path.expanduser('../input/'),
                                                        QFileDialog.ShowDirsOnly)
             if dirname:
                 self.dirname = dirname.replace('/', os.sep)
@@ -130,7 +130,7 @@ class Example(QWidget):
         else:
             dirname = QFileDialog.getOpenFileName(self,
                                                   'open folder/file',
-                                                  os.path.expanduser('../'))
+                                                  os.path.expanduser('../input/'))
             if dirname:
                 self.dirname = dirname[0].replace('/', os.sep)
         path.setText(self.dirname)
